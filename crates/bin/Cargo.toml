@@ -1,0 +1,10 @@
+[package]
+name = "an-open-sky-bin"
+version.workspace = true
+rust-version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+an-open-sky-sim = { version = "0.0.0", path = "../sim" }
+bevy = "0.20.0"
