@@ -1,3 +1,4 @@
+use blake3::Hasher;
 use noise::{NoiseFn, OpenSimplex};
 
 const FINE_SCALE: f64 = 0.5;
@@ -12,8 +13,8 @@ pub struct WorldGenerator {
 
 impl WorldGenerator {
     pub fn new(scale: f64, seed: u32) -> Self {
-        let broad = OpenSimplex::new(seed);
-        let fine = OpenSimplex::new(seed + 1);
+        let broad = OpenSimplex::new(generate_hash(seed, b"broad"));
+        let fine = OpenSimplex::new(generate_hash(seed, b"fine"));
 
         WorldGenerator {
             broad: Layer {
@@ -61,4 +62,17 @@ struct Layer {
 pub enum Terrain {
     Land,
     Ocean,
+}
+
+fn generate_hash(seed: u32, salt: &[u8]) -> u32 {
+    let mut hasher = Hasher::new();
+    hasher.update(salt);
+    hasher.update(&seed.to_le_bytes());
+
+    let hash = hasher.finalize();
+    // SAFETY: BLAKE3 always returns 32 bytes, so this slice exists
+    // and has the four bytes required.
+    let four: [u8; 4] = hash.as_bytes()[..4].try_into().unwrap();
+
+    u32::from_le_bytes(four)
 }

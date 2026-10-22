@@ -77,7 +77,15 @@ fn apply_movement(
     mut cmd: Commands,
     time: Res<Time>,
 ) {
-    let mut transform = camera.get_mut(movement.context).unwrap();
+    let Ok(mut transform) = camera.get_mut(movement.context) else {
+        warn!(
+            "movement context {:?} is not a camera with a transform",
+            movement.context
+        );
+
+        return;
+    };
+
     let previous_tile = (
         (transform.translation.x / TILE_SIZE).floor() as i32,
         (transform.translation.y / TILE_SIZE).floor() as i32,
