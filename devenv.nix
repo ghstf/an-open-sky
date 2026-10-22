@@ -4,7 +4,7 @@
 }:
 
 {
-  packages = [ pkgs.cargo-about pkgs.jq pkgs.just pkgs.zlib ];
+  packages = [ pkgs.just ];
 
   languages = {
     rust = {
