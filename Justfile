@@ -9,5 +9,5 @@ test:
     cargo test --workspace --all-features
 
 play *args:
-    cargo run --package an-open-sky-bin -- {{ args }}
+    cargo run --package aos-bin -- {{ args }}
 
